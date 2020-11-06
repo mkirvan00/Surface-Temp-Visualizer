@@ -88,7 +88,7 @@ LandAndOceanAverageTemperatureUncertainty VARCHAR(100) #DECIMAL(10,4) UNSIGNED
 
 
 
-VARCHAR(100), #
+
 
 
 
