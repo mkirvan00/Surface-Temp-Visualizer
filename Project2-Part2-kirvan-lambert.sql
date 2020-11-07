@@ -45,6 +45,68 @@ LandAndOceanAverageTemperatureUncertainty DECIMAL(10,4) UNSIGNED
 
 
 
+DROP TABLE IF EXISTS land_data; 
+CREATE TABLE land_data(
+dt VARCHAR(100), #DATE, 
+LandAverageTemperature VARCHAR(100), #DECIMAL(10, 6), 
+LandAverageTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+LandMaxTemperature VARCHAR(100), #DECIMAL(10, 6), 
+LandMaxTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+LandMinTemperature VARCHAR(100), #DECIMAL(10, 6), 
+LandMinTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+LandAndOceanAverageTemperature VARCHAR(100), #DECIMAL(10, 6), 
+LandAndOceanAverageTemperatureUncertainty VARCHAR(100) #DECIMAL(10,4) UNSIGNED
+);
+
+DROP TABLE IF EXISTS city_data; 
+CREATE TABLE city_data(
+city_dt DATE, 
+city_AverageTemperature VARCHAR(100), #DECIMAL(10, 6), 
+city_AverageTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+city_City VARCHAR(100), #VARCHAR(40), 
+city_Country VARCHAR(100), #VARCHAR (40), 
+city_Latitude VARCHAR(100), #VARCHAR (7), 
+city_Longitude VARCHAR(100));
+
+
+DROP TABLE IF EXISTS country_data; 
+CREATE TABLE country_data (
+country_dt VARCHAR(100), #DATE, 
+country_AverageTemperature VARCHAR(100), #DECIMAL(10, 6), 
+country_AverageTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+country_Country VARCHAR(100) #VARCHAR (40)
+);
+
+
+DROP TABLE IF EXISTS major_city_data; 
+CREATE TABLE major_city_data (
+mCity_dt VARCHAR(100), #DATE, 
+mCity_AverageTemperature VARCHAR(100), #DECIMAL(10, 6), 
+mCity_AverageTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+mCity_City VARCHAR(100), #VARCHAR(40),
+mCity_Country VARCHAR(100), #VARCHAR(40), 
+mCity_Latitude VARCHAR(100), #VARCHAR(7), 
+mCity_Longitude VARCHAR(100)
+);
+
+DROP TABLE IF EXISTS state_data; 
+CREATE TABLE state_data (
+state_dt VARCHAR(100), #DATE, 
+state_AverageTemperature VARCHAR(100), #DECIMAL(10, 6), 
+state_AverageTemperatureUncertainty VARCHAR(100), #DECIMAL(10,4) UNSIGNED, 
+state_State VARCHAR(100), #VARCHAR(40),
+state_Country VARCHAR(100)
+);
+
+
+
+
+
+
+
+
+
+
 -- TABLE with all VARCHAR values for easy insertion
 
 DROP TABLE IF EXISTS temp_data; 
