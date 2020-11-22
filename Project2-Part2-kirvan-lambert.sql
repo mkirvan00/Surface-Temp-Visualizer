@@ -216,56 +216,78 @@ IGNORE 1 LINES
 
 
 #land table 
+SET FOREIGN_KEY_CHECKS=0; 
 DROP TABLE IF EXISTS land; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE land
 (land_id INT AUTO_INCREMENT, 
 PRIMARY KEY (land_id));
 
-#land table 
+#country table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS country; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE country
-(country_Country VARCHAR (50), 
-PRIMARY KEY (country_Country));
+(country_id INT AUTO_INCREMENT, 
+country_Country VARCHAR (50), 
+PRIMARY KEY (country_id, country_Country));
 
 #city table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS city; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE city
-(city_City VARCHAR (50), 
+(city_id INT AUTO_INCREMENT, 
+city_City VARCHAR (50), 
 city_Country VARCHAR (50),
-city_Latitude DECIMAL(10,4),
-city_Longitude DECIMAL(10,4), 
-PRIMARY KEY (city_City),
+city_Latitude VARCHAR (20),
+city_Longitude VARCHAR (20), 
+PRIMARY KEY (city_id),
 CONSTRAINT fk_city_country
 	FOREIGN KEY (city_Country)
-    REFERENCES country(country_Country)
+    REFERENCES country(country_Country) ON DELETE CASCADE
 ); 
 
 #major city table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS major_city; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE major_city
-(mCity_City VARCHAR (50), 
+(mCity_id INT AUTO_INCREMENT, 
+mCity_City VARCHAR (50), 
 mCity_Country VARCHAR (50),
-mCity_Latitude DECIMAL(10,4),
-mCity_Longitude DECIMAL(10,4), 
-PRIMARY KEY (mCity_City),
+mCity_Latitude VARCHAR (20),
+mCity_Longitude VARCHAR (20), 
+PRIMARY KEY (mCity_id),
 CONSTRAINT fk_mCity_country
 	FOREIGN KEY (mCity_Country)
-    REFERENCES country(country_Country)
+    REFERENCES country(country_Country) ON DELETE CASCADE
 ); 
 
 #state table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS state; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE state
-(state_State VARCHAR (20), 
+(state_id INT AUTO_INCREMENT,
+state_State VARCHAR (20), 
 state_Country VARCHAR (50),
-PRIMARY KEY(state_State),
+PRIMARY KEY(state_id),
 CONSTRAINT fk_state_country
 	FOREIGN KEY (state_Country)
-    REFERENCES country(country_Country)
+    REFERENCES country(country_Country)  ON DELETE CASCADE
 );
 
 #stateAvg table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS stateAvg; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE stateAvg
 (state_State VARCHAR (20),
 state_dt DATE, 
@@ -274,11 +296,14 @@ avg_temp_uncertainty DECIMAL (8,4),
 PRIMARY KEY (state_dt, state_State),
 CONSTRAINT fk_state_stateAvg
 	FOREIGN KEY (state_State)
-    REFERENCES state(state_State)
+    REFERENCES state(state_State)  ON DELETE CASCADE
 ); 
 
 #cityAvg table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS cityAvg; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE cityAvg
 (city_City VARCHAR (50), 
 city_dt DATE, 
@@ -287,11 +312,14 @@ avg_temp_uncertainty DECIMAL (8,4),
 PRIMARY KEY (city_City, city_dt),
 CONSTRAINT fk_city_cityAvg
 	FOREIGN KEY (city_City)
-    REFERENCES city(city_City)
+    REFERENCES city(city_City)  ON DELETE CASCADE
 ); 
 
 #countryAvg table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS countryAvg; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE countryAvg
 (country_Country VARCHAR (50),
 country_dt DATE, 
@@ -300,25 +328,31 @@ avg_temp_uncertainty DECIMAL (8,4),
 PRIMARY KEY (country_Country, country_dt),
 CONSTRAINT fk_country_countryAvg
 	FOREIGN KEY (country_Country)
-    REFERENCES country(country_Country)
+    REFERENCES country(country_Country) ON DELETE CASCADE
 ); 
 
 #majorCityAvg table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS majorCityAvg; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE majorCityAvg
 (mCity_City VARCHAR (50), 
 mCity_dt DATE, 
 mCity_Country VARCHAR (50), 
-mCity_Latitude DECIMAL (10,4), 
-mCity_Longitude DECIMAL (10,4), 
+mCity_Latitude VARCHAR (20), 
+mCity_Longitude VARCHAR (20), 
 PRIMARY KEY (mCity_City, mCity_dt),
 CONSTRAINT fk_mCity_mCityAvg
 	FOREIGN KEY (mCity_City)
-    REFERENCES major_city(mCity_City)
+    REFERENCES major_city(mCity_City) ON DELETE CASCADE
 ); 
 
 #landAvg table 
+SET FOREIGN_KEY_CHECKS=0;
 DROP TABLE IF EXISTS landAvg; 
+SET FOREIGN_KEY_CHECKS=1;
+
 CREATE TABLE landAvg
 (land_dt DATE, 
 land_id INT,
@@ -331,7 +365,7 @@ min_temp_uncertainty DECIMAL (8,4),
 PRIMARY KEY (land_dt, land_id), 
 CONSTRAINT fk_land_landAvg
 	FOREIGN KEY (land_id)
-    REFERENCES land(land_id)
+    REFERENCES land(land_id)  ON DELETE CASCADE
 ); 
 
 
@@ -340,16 +374,140 @@ CONSTRAINT fk_land_landAvg
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 #//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+#insert country data
 INSERT INTO country (
 country_Country)
 SELECT country_Country
 FROM country_data; 
 
+
+#insert state data 
 INSERT INTO state (
 state_State)
 SELECT 
 state_State
+FROM state_data;
+
+#insert city data 
+INSERT INTO city(
+city_City, 
+city_Latitude, 
+city_Longitude)
+SELECT city_City, 
+city_Latitude, 
+city_Longitude
+FROM city_data; 
+
+#insert major city data 
+INSERT INTO major_city(
+mCity_City, 
+mCity_Latitude, 
+mCity_Longitude)
+SELECT mCity_City, 
+mCity_Latitude, 
+mCity_Longitude
+FROM major_city_data; 
+
+#insert average country data 
+INSERT INTO countryAvg(
+country_dt, 
+avg_temp, 
+avg_temp_uncertainty)
+SELECT country_dt, 
+country_AverageTemperature, 
+country_AverageTemperatureUncertainty
+FROM country_data; 
+
+#insert average state data 
+INSERT INTO stateAvg(
+state_dt, 
+avg_temp, 
+avg_temp_uncertainty)
+SELECT state_dt, 
+state_AverageTemperature, 
+state_AverageTemperatureUncertainty
 FROM state_data; 
+
+#insert average city data 
+INSERT INTO cityAvg(
+city_dt, 
+avg_temp, 
+avg_temp_uncertainty)
+SELECT city_dt, 
+city_AverageTemperature, 
+city_AverageTemperatureUncertainty
+FROM city_data; 
+
+
+#insert average major city data 
+INSERT INTO majorCityAvg(
+mCity_dt, 
+avg_temp, 
+avg_temp_uncertainty)
+SELECT mCity_dt, 
+mCity_AverageTemperature, 
+mCity_AverageTemperatureUncertainty
+FROM major_city_data; 
+
+#insert average land data 
+INSERT INTO landAvg(
+land_dt, 
+avg_temp, 
+avg_temp_uncertainty,
+max_temp, 
+min_temp, 
+max_temp_uncertainty,
+min_temp_uncertainty
+)
+SELECT dt, 
+LandAverageTemperature, 
+LandAverageTemperatureUncertainty,
+LandMaxTemperature, 
+LandMinTemperature, 
+LandMaxTemperatureUncertainty,
+LandMinTemperatureUncertainty
+FROM land_data; 
+
+
+# Views
+#//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+# countries and their averages 
+DROP VIEW IF EXISTS countries_average_temps; 
+CREATE VIEW countries_average_temps AS 
+
+SELECT  country_Country, AVG(avg_temp) as average_temp
+FROM countryAvg
+GROUP BY country_Country; 
+
+
+# states and their averages 
+DROP VIEW IF EXISTS states_average_temps; 
+CREATE VIEW states_average_temps AS 
+
+SELECT  state_State, AVG(avg_temp) as average_temp
+FROM stateAvg
+GROUP BY state_State; 
+
+
+# cities and their averages 
+DROP VIEW IF EXISTS cities_average_temps; 
+CREATE VIEW cities_average_temps AS 
+
+SELECT  city_City, AVG(avg_temp) as average_temp
+FROM cityAvg
+GROUP BY city_City; 
+
+# major cities and their averages 
+DROP VIEW IF EXISTS major_cities_average_temps; 
+CREATE VIEW major_cities_average_temps AS 
+
+SELECT  mCity_City, AVG(avg_temp) as average_temp
+FROM majorCityAvg
+GROUP BY mCity_City; 
 
 
 
@@ -365,15 +523,12 @@ DROP PROCEDURE IF EXISTS compare_countries;
 DELIMITER //
 
 CREATE PROCEDURE compare_countries(
-	IN country1 VARCHAR (30),
-    IN country2 VARCHAR(30))
+	IN country_input VARCHAR (50))
 BEGIN
 
-SELECT nameof, AVG(temp)
-FROM country
-	JOIN average ON (country.country = average.nameof)
-GROUP BY nameof
-HAVING nameof = country1 OR nameof = country2; 
+SELECT country_Country, average_temp
+FROM countries_average_temps
+WHERE country_Country = country_input; 
 
 END//
 
@@ -381,20 +536,17 @@ DELIMITER ;
 
 
 # Stored procedure to compare STATES
-DROP PROCEDURE IF EXISTS compare_countries; 
+DROP PROCEDURE IF EXISTS compare_states; 
 
 DELIMITER //
 
 CREATE PROCEDURE compare_states(
-	IN state1 VARCHAR (15),
-    IN statey2 VARCHAR(15))
+	IN state_input VARCHAR (20))
 BEGIN
 
-SELECT nameof, AVG(temp)
-FROM state
-	JOIN average ON (state.state = average.nameof)
-GROUP BY nameof
-HAVING nameof = state1 OR nameof = state2; 
+SELECT state_State, average_temp
+FROM states_average_temps
+WHERE state_State = state_input; 
 
 END//
 
@@ -402,42 +554,35 @@ DELIMITER ;
 
 
  # Stored procedure to compare MAJOR CITIES
-DROP PROCEDURE IF EXISTS compare_countries; 
+DROP PROCEDURE IF EXISTS compare_major_cities; 
 
 DELIMITER //
 
-CREATE PROCEDURE compare_states(
-	IN majory1 VARCHAR (15),
-    IN major2 VARCHAR(15))
+CREATE PROCEDURE compare_major_cities(
+	IN major_city_input VARCHAR (50))
 BEGIN
 
-SELECT nameof, AVG(temp)
-FROM major_city
-	JOIN average ON (major_city.mCity_City = average.nameof)
-GROUP BY nameof
-HAVING nameof = major1 OR nameof = major2; 
+SELECT mCity_City, average_temp
+FROM major_cities_average_temps
+WHERE mCityCity=major_city_input; 
 
 END//
 
 DELIMITER ; 
 
 
-
  # Stored procedure to compare  CITIES
-DROP PROCEDURE IF EXISTS compare_countries; 
+DROP PROCEDURE IF EXISTS compare_cities; 
 
 DELIMITER //
 
-CREATE PROCEDURE compare_states(
-	IN city1 VARCHAR (15),
-    IN city2 VARCHAR(15))
+CREATE PROCEDURE compare_cities(
+	IN city_input VARCHAR (50))
 BEGIN
 
-SELECT nameof, AVG(temp)
-FROM major_city
-	JOIN average ON (city.city_City = average.nameof)
-GROUP BY nameof
-HAVING nameof = city1 OR nameof = city2; 
+SELECT city_City, average_temp
+FROM cities_average_temps
+WHERE city_City = city_input; 
 
 END//
 
