@@ -5,15 +5,15 @@ if (isset($_POST['submit'])) {
 
     require_once("tempConn.php");
 
-    $country1 = $_POST['first-country'];
+    $country = $_POST['country'];
 
-    $query1 = "CALL compare_country(:first-country)";
+    $query1 = "CALL compare_country(:country)";
 
 
 try
     {
       $prepared_stmt = $dbo->prepare($query);
-      $prepared_stmt->bindValue(':country_input', $country_input, PDO::PARAM_STR);
+      $prepared_stmt->bindValue(':country', $country, PDO::PARAM_STR);
       $prepared_stmt->execute();
       $result1 = $prepared_stmt->fetchAll();
 
@@ -34,8 +34,8 @@ try
   <h1>Enter First Country Name</h1>
 
   <form method="post">
-    <label for="first-city">First State</label>
-        <input type="text" name="first-country">
+    <label for="country">First Country</label>
+        <input type="text" name="country">
       
         <input type="submit" name="submit" value="Submit">
     </form>
@@ -44,12 +44,12 @@ try
       if (isset($_POST['submit'])) {
         if ($result1 && $prepared_stmt->rowCount() > 0) { ?>
     
-              <h2>First City Data</h2>
+              <h2>First Country Data</h2>
 
               <table>
                 <thead>
                   <tr>
-                    <th>State Name</th>
+                    <th>Country Name</th>
                     <th>Average Temperature</th>
                   </tr>
                 </thead>
@@ -66,7 +66,7 @@ try
             </table>
   
         <?php } else { ?>
-          Sorry, no results found for <?php echo $_POST['first-country']; ?>.
+          Sorry, no results found for <?php echo $_POST['country']; ?>.
         <?php }
     } ?>
 </body>
