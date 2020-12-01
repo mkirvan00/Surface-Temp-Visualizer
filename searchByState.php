@@ -5,17 +5,17 @@ if (isset($_POST['submit'])) {
 
     require_once("tempConn.php");
 
-    $dateOf = $_POST['state_input'];
+    $state1 = $_POST['first-state'];
 
-    $query = "SELECT state_State, average_temp FROM states_average_temps WHERE state_State = :state_input";
+    $query1 = "CALL compare_states(:first-state)";
 
 
 try
     {
       $prepared_stmt = $dbo->prepare($query);
-      $prepared_stmt->bindValue(':state_input', $state_input, PDO::PARAM_STR);
+      $prepared_stmt->bindValue(':state_input', $state1, PDO::PARAM_STR);
       $prepared_stmt->execute();
-      $result = $prepared_stmt->fetchAll();
+      $result1 = $prepared_stmt->fetchAll();
 
     }
     catch (PDOException $ex)
@@ -27,25 +27,48 @@ try
 ?>
 <html>
 <head>
-	<title>Search by State</title>
+  <title>Search by State</title>
 </head>
 <body>
 
-	<h1>Enter First State Name</h1>
+  <h1>Enter First State Name</h1>
 
-	<!-- Search form -->
-	<div class="md-form mt-0">
-  		<input class="form-control" type="text" placeholder="i.e. Tennessee" aria-label="Search">
-  		<input type="submit" name="submit" value="Submit">
-	</div>
+    <form method="post">
+    <label for="first-city">First State</label>
+        <input type="text" name="first-state">
+      
+        <input type="submit" name="submit" value="Submit">
+    </form>
 
-		<h1>Enter Second State Name</h1>
+    <?php
+      if (isset($_POST['submit'])) {
+        if ($result1 && $prepared_stmt->rowCount() > 0) { ?>
+    
+              <h2>First City Data</h2>
 
-	<!-- Search form -->
-	<div class="md-form mt-0">
-  		<input class="form-control" type="text" placeholder="i.e. Colorado" aria-label="Search">
-  		<input type="submit" name="submit" value="Submit">
-	</div>
+              <table>
+                <thead>
+                  <tr>
+                    <th>State Name</th>
+                    <th>Average Temperature</th>
+                  </tr>
+                </thead>
+                <tbody>
+            
+                  <?php foreach ($result as $row) { ?>
+                
+                    <tr>
+                      <td><?php echo $row["state_State"]; ?></td>
+                      <td><?php echo $row["average_temp"]; ?></td>
+                    </tr>
+                  <?php } ?>
+                </tbody>
+            </table>
+  
+        <?php } else { ?>
+          Sorry, no results found for <?php echo $_POST['first-state']; ?>.
+        <?php }
+    } ?>
 
 </body>
 </html>
