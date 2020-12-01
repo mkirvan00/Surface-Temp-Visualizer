@@ -7,12 +7,12 @@ if (isset($_POST['submit'])) {
 
     $country = $_POST['country'];
 
-    $query1 = "CALL compare_country(:country)";
+    $query1 = "SELECT country_Country, average_temp FROM countries_average_temps WHERE country_Country = :country LIMIT 10;";
 
 
 try
     {
-      $prepared_stmt = $dbo->prepare($query);
+      $prepared_stmt = $dbo->prepare($query1);
       $prepared_stmt->bindValue(':country', $country, PDO::PARAM_STR);
       $prepared_stmt->execute();
       $result1 = $prepared_stmt->fetchAll();
@@ -55,7 +55,7 @@ try
                 </thead>
                 <tbody>
             
-                  <?php foreach ($result as $row) { ?>
+                  <?php foreach ($result1 as $row) { ?>
                 
                     <tr>
                       <td><?php echo $row["country_Country"]; ?></td>

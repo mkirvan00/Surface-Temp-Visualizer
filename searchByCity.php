@@ -6,12 +6,14 @@ if (isset($_POST['submit'])) {
 
     $city = $_POST['city'];
     //$city2 = $_POST['second-city'];
-    $query1 = "CALL compare_cities(:city)";// ask TA
+    $query1 = "SELECT city_City, average_temp FROM cities_average_temps WHERE city_City = :city LIMIT 10; ";// ask TA
+
+  
 
 try
     {
       $prepared_stmt = $dbo->prepare($query1);
-      $prepared_stmt->bindValue('city', $city, PDO::PARAM_STR);
+      $prepared_stmt->bindValue(':city', $city, PDO::PARAM_STR);
       $prepared_stmt->execute();
       $result1 = $prepared_stmt->fetchAll();
 
@@ -40,6 +42,13 @@ try
         <input type="submit" name="submit" value="Submit">
     </form>
   
+
+
+
+
+
+
+
   <?php
       if (isset($_POST['submit'])) {
         if ($result1 && $prepared_stmt->rowCount() > 0) { ?>
@@ -51,11 +60,13 @@ try
                   <tr>
                     <th>City Name</th>
                     <th>Average Temperature</th>
-                  </tr>
-                </thead>
+                    </tr>
+                    </thead>
+                  
+                
                 <tbody>
             
-                  <?php foreach ($result as $row) { ?>
+                   <?php foreach ($result1 as $row) { ?> 
                 
                     <tr>
                       <td><?php echo $row["city_City"]; ?></td>

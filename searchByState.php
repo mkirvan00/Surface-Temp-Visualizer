@@ -5,15 +5,15 @@ if (isset($_POST['submit'])) {
 
     require_once("tempConn.php");
 
-    $state1 = $_POST['first-state'];
+    $state = $_POST['state'];
 
-    $query1 = "CALL compare_states(:first-state)";
+    $query1 = "SELECT state_State, average_temp FROM states_average_temps WHERE state_State = :state LIMIT 10; ";
 
 
 try
     {
-      $prepared_stmt = $dbo->prepare($query);
-      $prepared_stmt->bindValue(':state_input', $state1, PDO::PARAM_STR);
+      $prepared_stmt = $dbo->prepare($query1);
+      $prepared_stmt->bindValue(':state', $state, PDO::PARAM_STR);
       $prepared_stmt->execute();
       $result1 = $prepared_stmt->fetchAll();
 
@@ -35,7 +35,7 @@ try
 
     <form method="post">
     <label for="first-city">First State</label>
-        <input type="text" name="first-state">
+        <input type="text" name="state">
       
         <input type="submit" name="submit" value="Submit">
     </form>
@@ -55,7 +55,7 @@ try
                 </thead>
                 <tbody>
             
-                  <?php foreach ($result as $row) { ?>
+                  <?php foreach ($result1 as $row) { ?>
                 
                     <tr>
                       <td><?php echo $row["state_State"]; ?></td>
@@ -66,7 +66,7 @@ try
             </table>
   
         <?php } else { ?>
-          Sorry, no results found for <?php echo $_POST['first-state']; ?>.
+          Sorry, no results found for <?php echo $_POST['state']; ?>.
         <?php }
     } ?>
 
