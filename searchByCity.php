@@ -1,4 +1,4 @@
-<? php  
+<?php  
 
 if (isset($_POST['submit'])) {
 
@@ -31,8 +31,7 @@ try
 
   
   <h1>Enter First City Name</h1>
-
-  
+ 
 
   <form method="post">
     <label for="first-city">First City</label>
